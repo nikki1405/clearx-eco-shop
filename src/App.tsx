@@ -9,6 +9,12 @@ import HowItWorks from "./pages/HowItWorks";
 import Pricing from "./pages/Pricing";
 import SignupLanding from "./pages/SignupLanding";
 import Login from "./pages/Login";
+import RetailerSignup from "./pages/RetailerSignup";
+import CustomerSignup from "./pages/CustomerSignup";
+import DeliveryAgentSignup from "./pages/DeliveryAgentSignup";
+import RetailerDashboard from "./pages/RetailerDashboard";
+import CustomerDashboard from "./pages/CustomerDashboard";
+import DeliveryAgentDashboard from "./pages/DeliveryAgentDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,7 +30,13 @@ const App = () => (
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/signup" element={<SignupLanding />} />
+          <Route path="/signup/retailer" element={<RetailerSignup />} />
+          <Route path="/signup/customer" element={<CustomerSignup />} />
+          <Route path="/signup/agent" element={<DeliveryAgentSignup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/dashboard/retailer" element={<RetailerDashboard />} />
+          <Route path="/dashboard/customer" element={<CustomerDashboard />} />
+          <Route path="/dashboard/agent" element={<DeliveryAgentDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
