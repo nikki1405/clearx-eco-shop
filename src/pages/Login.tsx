@@ -47,6 +47,9 @@ const Login = () => {
       // Set logged in status
       localStorage.setItem('isLoggedIn', 'true');
       
+      // Dispatch custom event to notify navbar and other components
+      window.dispatchEvent(new Event('loginStateChanged'));
+      
       // Role-based redirection
       switch (userRole) {
         case 'retailer':

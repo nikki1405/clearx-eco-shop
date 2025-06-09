@@ -1,12 +1,32 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ProfileDropdown from './ProfileDropdown';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      setIsLoggedIn(loggedIn);
+    };
+
+    // Check initial state
+    checkLoginStatus();
+
+    // Listen for storage changes and custom events
+    window.addEventListener('storage', checkLoginStatus);
+    window.addEventListener('loginStateChanged', checkLoginStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+      window.removeEventListener('loginStateChanged', checkLoginStatus);
+    };
+  }, []);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -49,11 +69,10 @@ const Navbar = () => {
               Pricing
             </Link>
             
-            {/* Profile Dropdown or Login/Signup buttons */}
-            <ProfileDropdown />
-            
-            {/* Show login/signup only if user is not logged in */}
-            {!localStorage.getItem('isLoggedIn') && (
+            {/* Conditional rendering based on login state */}
+            {isLoggedIn ? (
+              <ProfileDropdown />
+            ) : (
               <>
                 <Link 
                   to="/role-selection" 
@@ -101,8 +120,8 @@ const Navbar = () => {
                 Pricing
               </Link>
               
-              {/* Mobile profile section or login/signup */}
-              {localStorage.getItem('isLoggedIn') ? (
+              {/* Mobile conditional rendering */}
+              {isLoggedIn ? (
                 <div className="px-3 py-2">
                   <ProfileDropdown />
                 </div>

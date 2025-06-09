@@ -18,14 +18,32 @@ const ProfileDropdown = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in and get their role
-    const role = localStorage.getItem('userRole');
-    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const checkLoginStatus = () => {
+      const role = localStorage.getItem('userRole');
+      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      
+      if (role && loggedIn) {
+        setUserRole(role);
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+        setUserRole('');
+      }
+    };
+
+    // Check initial state
+    checkLoginStatus();
+
+    // Listen for storage changes (useful for multiple tabs)
+    window.addEventListener('storage', checkLoginStatus);
     
-    if (role && loggedIn) {
-      setUserRole(role);
-      setIsLoggedIn(true);
-    }
+    // Custom event listener for login/logout within the same tab
+    window.addEventListener('loginStateChanged', checkLoginStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+      window.removeEventListener('loginStateChanged', checkLoginStatus);
+    };
   }, []);
 
   const getRoleDisplayName = (role: string) => {
@@ -67,6 +85,10 @@ const ProfileDropdown = () => {
     localStorage.removeItem('isLoggedIn');
     setIsLoggedIn(false);
     setUserRole('');
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('loginStateChanged'));
+    
     navigate('/');
   };
 
