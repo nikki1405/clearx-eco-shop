@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +11,30 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Get the selected role from localStorage
+    const selectedRole = localStorage.getItem('userRole') || 'customer';
+    setUserRole(selectedRole);
+  }, []);
+
+  const getRoleDisplayName = (role: string) => {
+    switch (role) {
+      case 'retailer': return 'Retailer';
+      case 'agent': return 'Delivery Agent';
+      default: return 'Customer';
+    }
+  };
+
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case 'retailer': return '🏪';
+      case 'agent': return '🚴‍♂️';
+      default: return '🛒';
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,15 +43,25 @@ const Login = () => {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      // For demo purposes, redirect based on email
-      if (email.includes('retailer')) {
-        navigate('/dashboard/retailer');
-      } else if (email.includes('agent')) {
-        navigate('/dashboard/agent');
-      } else {
-        navigate('/dashboard/customer');
+      
+      // Role-based redirection
+      switch (userRole) {
+        case 'retailer':
+          navigate('/dashboard/retailer');
+          break;
+        case 'agent':
+          navigate('/dashboard/agent');
+          break;
+        default:
+          navigate('/dashboard/customer');
+          break;
       }
     }, 1500);
+  };
+
+  const handleChangeRole = () => {
+    localStorage.removeItem('userRole');
+    navigate('/role-selection');
   };
 
   return (
@@ -46,12 +79,28 @@ const Login = () => {
             <p className="mt-2 text-gray-600">Sign in to your ClearX account</p>
           </div>
 
+          {/* Role Indicator */}
+          <div className="bg-white rounded-lg border p-4 text-center">
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-2xl">{getRoleIcon(userRole)}</span>
+              <span className="font-medium text-gray-900">Signing in as {getRoleDisplayName(userRole)}</span>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleChangeRole}
+              className="mt-2 text-sm"
+            >
+              Change Role
+            </Button>
+          </div>
+
           {/* Login Form */}
           <Card className="shadow-lg border-0">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl text-center">Sign In</CardTitle>
               <CardDescription className="text-center">
-                Enter your credentials to access your account
+                Enter your credentials to access your {getRoleDisplayName(userRole).toLowerCase()} account
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">

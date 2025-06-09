@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import HowItWorks from "./pages/HowItWorks";
 import Pricing from "./pages/Pricing";
 import SignupLanding from "./pages/SignupLanding";
+import RoleSelection from "./pages/RoleSelection";
 import Login from "./pages/Login";
 import RetailerSignup from "./pages/RetailerSignup";
 import CustomerSignup from "./pages/CustomerSignup";
