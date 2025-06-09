@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import ProfileDropdown from './ProfileDropdown';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,17 +48,26 @@ const Navbar = () => {
             >
               Pricing
             </Link>
-            <Link 
-              to="/login" 
-              className="text-sm font-medium text-gray-700 hover:text-eco-green transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link to="/signup">
-              <Button className="bg-eco-green hover:bg-eco-dark text-white">
-                Get Started
-              </Button>
-            </Link>
+            
+            {/* Profile Dropdown or Login/Signup buttons */}
+            <ProfileDropdown />
+            
+            {/* Show login/signup only if user is not logged in */}
+            {!localStorage.getItem('isLoggedIn') && (
+              <>
+                <Link 
+                  to="/role-selection" 
+                  className="text-sm font-medium text-gray-700 hover:text-eco-green transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link to="/signup">
+                  <Button className="bg-eco-green hover:bg-eco-dark text-white">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -90,14 +100,24 @@ const Navbar = () => {
               <Link to="/pricing" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-eco-green">
                 Pricing
               </Link>
-              <Link to="/login" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-eco-green">
-                Sign In
-              </Link>
-              <Link to="/signup" className="block px-3 py-2">
-                <Button className="w-full bg-eco-green hover:bg-eco-dark text-white">
-                  Get Started
-                </Button>
-              </Link>
+              
+              {/* Mobile profile section or login/signup */}
+              {localStorage.getItem('isLoggedIn') ? (
+                <div className="px-3 py-2">
+                  <ProfileDropdown />
+                </div>
+              ) : (
+                <>
+                  <Link to="/role-selection" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-eco-green">
+                    Sign In
+                  </Link>
+                  <Link to="/signup" className="block px-3 py-2">
+                    <Button className="w-full bg-eco-green hover:bg-eco-dark text-white">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}

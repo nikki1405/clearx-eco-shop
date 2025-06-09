@@ -44,6 +44,9 @@ const Login = () => {
     setTimeout(() => {
       setIsLoading(false);
       
+      // Set logged in status
+      localStorage.setItem('isLoggedIn', 'true');
+      
       // Role-based redirection
       switch (userRole) {
         case 'retailer':
