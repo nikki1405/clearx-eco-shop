@@ -59,23 +59,23 @@ const ProfileDropdown = () => {
     switch (role) {
       case 'retailer':
         return {
-          dashboard: '/dashboard/retailer',
-          profile: '/profile/retailer'
+          dashboard: '/retailer-dashboard',
+          profile: '/retailer-profile'
         };
       case 'agent':
         return {
-          dashboard: '/dashboard/agent',
-          profile: '/profile/agent'
+          dashboard: '/delivery-dashboard',
+          profile: '/delivery-profile'
         };
       case 'customer':
         return {
-          dashboard: '/dashboard/customer',
-          profile: '/profile/customer'
+          dashboard: '/customer-dashboard',
+          profile: '/customer-profile'
         };
       default:
         return {
-          dashboard: '/dashboard/customer',
-          profile: '/profile/customer'
+          dashboard: '/customer-dashboard',
+          profile: '/customer-profile'
         };
     }
   };
@@ -132,7 +132,7 @@ const ProfileDropdown = () => {
         <DropdownMenuItem asChild>
           <Link to={routes.profile} className="flex items-center cursor-pointer">
             <User className="mr-2 h-4 w-4" />
-            <span>View Profile</span>
+            <span>Edit Profile</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

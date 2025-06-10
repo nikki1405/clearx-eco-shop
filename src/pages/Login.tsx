@@ -53,13 +53,13 @@ const Login = () => {
       // Role-based redirection
       switch (userRole) {
         case 'retailer':
-          navigate('/dashboard/retailer');
+          navigate('/retailer-dashboard');
           break;
         case 'agent':
-          navigate('/dashboard/agent');
+          navigate('/delivery-dashboard');
           break;
         default:
-          navigate('/dashboard/customer');
+          navigate('/customer-dashboard');
           break;
       }
     }, 1500);
