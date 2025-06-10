@@ -16,6 +16,7 @@ import DeliveryAgentSignup from "./pages/DeliveryAgentSignup";
 import RetailerDashboard from "./pages/RetailerDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import DeliveryAgentDashboard from "./pages/DeliveryAgentDashboard";
+import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,9 +43,10 @@ const App = () => (
           <Route path="/dashboard/retailer" element={<RetailerDashboard />} />
           <Route path="/dashboard/customer" element={<CustomerDashboard />} />
           <Route path="/dashboard/agent" element={<DeliveryAgentDashboard />} />
-          <Route path="/retailer-profile" element={<RetailerDashboard />} />
-          <Route path="/customer-profile" element={<CustomerDashboard />} />
-          <Route path="/delivery-profile" element={<DeliveryAgentDashboard />} />
+          <Route path="/retailer-profile" element={<ProfilePage />} />
+          <Route path="/customer-profile" element={<ProfilePage />} />
+          <Route path="/delivery-profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<ProfilePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
