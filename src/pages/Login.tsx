@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -55,16 +54,16 @@ const Login = () => {
       
       console.log('Login state changed event dispatched');
       
-      // Role-based redirection
+      // Role-based redirection to match App.tsx routes
       switch (userRole) {
         case 'retailer':
-          navigate('/retailer-dashboard');
+          navigate('/dashboard/retailer');
           break;
         case 'agent':
-          navigate('/delivery-dashboard');
+          navigate('/dashboard/agent');
           break;
         default:
-          navigate('/customer-dashboard');
+          navigate('/dashboard/customer');
           break;
       }
     }, 1500);

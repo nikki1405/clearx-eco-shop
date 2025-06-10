@@ -61,22 +61,22 @@ const ProfileDropdown = () => {
     switch (role) {
       case 'retailer':
         return {
-          dashboard: '/retailer-dashboard',
+          dashboard: '/dashboard/retailer',
           profile: '/retailer-profile'
         };
       case 'agent':
         return {
-          dashboard: '/delivery-dashboard',
+          dashboard: '/dashboard/agent',
           profile: '/delivery-profile'
         };
       case 'customer':
         return {
-          dashboard: '/customer-dashboard',
+          dashboard: '/dashboard/customer',
           profile: '/customer-profile'
         };
       default:
         return {
-          dashboard: '/customer-dashboard',
+          dashboard: '/dashboard/customer',
           profile: '/customer-profile'
         };
     }
