@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,11 +16,51 @@ const RetailerDashboard = () => {
   ];
 
   const products = [
-    { id: 1, name: 'Fresh Apples', image: '🍎', price: '₹120', stock: 25, expiry: '2025-01-15', status: 'Active' },
-    { id: 2, name: 'Bread Loaves', image: '🍞', price: '₹35', stock: 5, expiry: '2025-01-10', status: 'Low Stock' },
-    { id: 3, name: 'Milk Packets', image: '🥛', price: '₹55', stock: 15, expiry: '2025-01-12', status: 'Active' },
-    { id: 4, name: 'Bananas', image: '🍌', price: '₹80', stock: 30, expiry: '2025-01-14', status: 'Active' },
-    { id: 5, name: 'Chicken', image: '🍗', price: '₹250', stock: 2, expiry: '2025-01-11', status: 'Critical' }
+    { 
+      id: 1, 
+      name: 'Fresh Apples', 
+      image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop', 
+      price: '₹120', 
+      stock: 25, 
+      expiry: '2025-01-15', 
+      status: 'Active' 
+    },
+    { 
+      id: 2, 
+      name: 'Bread Loaves', 
+      image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop', 
+      price: '₹35', 
+      stock: 5, 
+      expiry: '2025-01-10', 
+      status: 'Low Stock' 
+    },
+    { 
+      id: 3, 
+      name: 'Milk Packets', 
+      image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=100&h=100&fit=crop', 
+      price: '₹55', 
+      stock: 15, 
+      expiry: '2025-01-12', 
+      status: 'Active' 
+    },
+    { 
+      id: 4, 
+      name: 'Bananas', 
+      image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=100&h=100&fit=crop', 
+      price: '₹80', 
+      stock: 30, 
+      expiry: '2025-01-14', 
+      status: 'Active' 
+    },
+    { 
+      id: 5, 
+      name: 'Chicken', 
+      image: 'https://images.unsplash.com/photo-1606728035253-49e8a23146de?w=100&h=100&fit=crop', 
+      price: '₹250', 
+      stock: 2, 
+      expiry: '2025-01-11', 
+      status: 'Critical' 
+    }
   ];
 
   const salesData = [
@@ -97,7 +136,11 @@ const RetailerDashboard = () => {
                         <TableRow key={product.id}>
                           <TableCell>
                             <div className="flex items-center space-x-3">
-                              <span className="text-2xl">{product.image}</span>
+                              <img 
+                                src={product.image} 
+                                alt={product.name}
+                                className="w-12 h-12 object-cover rounded"
+                              />
                               <span className="font-medium">{product.name}</span>
                             </div>
                           </TableCell>

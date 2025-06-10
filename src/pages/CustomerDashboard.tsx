@@ -1,9 +1,9 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { MapPin } from 'lucide-react';
 import Layout from '@/components/Layout';
 
 const CustomerDashboard = () => {
@@ -12,24 +12,92 @@ const CustomerDashboard = () => {
     category: [],
     discount: '',
     price: '',
-    expiry: ''
+    expiry: '',
+    location: ''
   });
   
   const products = [
-    { id: 1, name: 'Fresh Apples', image: '🍎', price: 120, originalPrice: 150, discount: 20, expiry: '2 days', category: 'Fresh Produce', rating: 4.5 },
-    { id: 2, name: 'Bread Loaves', image: '🍞', price: 25, originalPrice: 35, discount: 29, expiry: '1 day', category: 'Bakery', rating: 4.2 },
-    { id: 3, name: 'Milk Packets', image: '🥛', price: 45, originalPrice: 55, discount: 18, expiry: '2 days', category: 'Dairy', rating: 4.8 },
-    { id: 4, name: 'Bananas', image: '🍌', price: 60, originalPrice: 80, discount: 25, expiry: '3 days', category: 'Fresh Produce', rating: 4.3 },
-    { id: 5, name: 'Cookies', image: '🍪', price: 80, originalPrice: 100, discount: 20, expiry: '5 days', category: 'Bakery', rating: 4.6 },
-    { id: 6, name: 'Yogurt', image: '🥛', price: 35, originalPrice: 45, discount: 22, expiry: '2 days', category: 'Dairy', rating: 4.4 }
+    { 
+      id: 1, 
+      name: 'Fresh Apples', 
+      image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=300&h=300&fit=crop', 
+      price: 120, 
+      originalPrice: 150, 
+      discount: 20, 
+      expiry: '2 days', 
+      category: 'Fresh Produce', 
+      rating: 4.5,
+      location: 'Mumbai Central'
+    },
+    { 
+      id: 2, 
+      name: 'Fresh Bread Loaves', 
+      image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=300&fit=crop', 
+      price: 25, 
+      originalPrice: 35, 
+      discount: 29, 
+      expiry: '1 day', 
+      category: 'Bakery', 
+      rating: 4.2,
+      location: 'Andheri West'
+    },
+    { 
+      id: 3, 
+      name: 'Fresh Milk Packets', 
+      image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=300&h=300&fit=crop', 
+      price: 45, 
+      originalPrice: 55, 
+      discount: 18, 
+      expiry: '2 days', 
+      category: 'Dairy', 
+      rating: 4.8,
+      location: 'Bandra East'
+    },
+    { 
+      id: 4, 
+      name: 'Ripe Bananas', 
+      image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300&h=300&fit=crop', 
+      price: 60, 
+      originalPrice: 80, 
+      discount: 25, 
+      expiry: '3 days', 
+      category: 'Fresh Produce', 
+      rating: 4.3,
+      location: 'Powai'
+    },
+    { 
+      id: 5, 
+      name: 'Chocolate Cookies', 
+      image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=300&h=300&fit=crop', 
+      price: 80, 
+      originalPrice: 100, 
+      discount: 20, 
+      expiry: '5 days', 
+      category: 'Bakery', 
+      rating: 4.6,
+      location: 'Thane West'
+    },
+    { 
+      id: 6, 
+      name: 'Greek Yogurt', 
+      image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=300&h=300&fit=crop', 
+      price: 35, 
+      originalPrice: 45, 
+      discount: 22, 
+      expiry: '2 days', 
+      category: 'Dairy', 
+      rating: 4.4,
+      location: 'Borivali West'
+    }
   ];
 
   const cartItems = [
-    { id: 1, name: 'Fresh Apples', price: 120, quantity: 2, image: '🍎' },
-    { id: 3, name: 'Milk Packets', price: 45, quantity: 1, image: '🥛' }
+    { id: 1, name: 'Fresh Apples', price: 120, quantity: 2, image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop' },
+    { id: 3, name: 'Fresh Milk Packets', price: 45, quantity: 1, image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=100&h=100&fit=crop' }
   ];
 
   const categories = ['Fresh Produce', 'Bakery', 'Dairy', 'Packaged Foods'];
+  const locations = ['Mumbai Central', 'Andheri West', 'Bandra East', 'Powai', 'Thane West', 'Borivali West'];
   
   const orderStatus = [
     { step: 'Order Placed', completed: true, time: '10:30 AM' },
@@ -110,6 +178,47 @@ const CustomerDashboard = () => {
                   <CardTitle>Filters</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Location Filter */}
+                  <div>
+                    <h4 className="font-medium mb-3 flex items-center">
+                      <MapPin className="mr-2 h-4 w-4" />
+                      Nearby Location
+                    </h4>
+                    <div className="space-y-2">
+                      <Input 
+                        placeholder="Search locations..." 
+                        value={selectedFilters.location}
+                        onChange={(e) => setSelectedFilters({
+                          ...selectedFilters,
+                          location: e.target.value
+                        })}
+                        className="mb-3"
+                      />
+                      <div className="max-h-32 overflow-y-auto space-y-2">
+                        {locations
+                          .filter(location => 
+                            location.toLowerCase().includes(selectedFilters.location.toLowerCase())
+                          )
+                          .map(location => (
+                            <div key={location} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={location}
+                                checked={selectedFilters.location === location}
+                                onCheckedChange={(checked) => {
+                                  setSelectedFilters({
+                                    ...selectedFilters,
+                                    location: checked ? location : ''
+                                  });
+                                }}
+                              />
+                              <label htmlFor={location} className="text-sm cursor-pointer">{location}</label>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  </div>
+
                   <div>
                     <h4 className="font-medium mb-3">Category</h4>
                     <div className="space-y-2">
@@ -195,8 +304,12 @@ const CustomerDashboard = () => {
                   <Card key={product.id} className="hover-lift">
                     <CardContent className="p-4">
                       <div className="relative mb-4">
-                        <div className="text-6xl text-center mb-2">{product.image}</div>
-                        <div className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 rounded-full text-xs">
+                        <img 
+                          src={product.image} 
+                          alt={product.name}
+                          className="w-full h-32 object-cover rounded-lg mb-2"
+                        />
+                        <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs">
                           {product.discount}% OFF
                         </div>
                       </div>
@@ -205,11 +318,15 @@ const CustomerDashboard = () => {
                         <span className="text-lg font-bold text-eco-green">₹{product.price}</span>
                         <span className="text-sm text-gray-500 line-through">₹{product.originalPrice}</span>
                       </div>
-                      <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
+                      <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                         <span>Expires in {product.expiry}</span>
                         <div className="flex items-center">
                           <span>⭐ {product.rating}</span>
                         </div>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-500 mb-3">
+                        <MapPin className="h-3 w-3 mr-1" />
+                        <span>{product.location}</span>
                       </div>
                       <Button className="w-full bg-eco-green hover:bg-eco-dark text-white">
                         Add to Cart
@@ -265,7 +382,11 @@ const CustomerDashboard = () => {
                   {cartItems.map(item => (
                     <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center space-x-3">
-                        <span className="text-2xl">{item.image}</span>
+                        <img 
+                          src={item.image} 
+                          alt={item.name}
+                          className="w-12 h-12 object-cover rounded"
+                        />
                         <div>
                           <p className="font-medium">{item.name}</p>
                           <p className="text-sm text-gray-600">₹{item.price} × {item.quantity}</p>
