@@ -44,16 +44,11 @@ const Login = () => {
     setTimeout(() => {
       setIsLoading(false);
       
-      console.log('Setting login status to true for role:', userRole);
-      
       // Set logged in status
       localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userRole', userRole);
       
       // Dispatch custom event to notify navbar and other components
       window.dispatchEvent(new Event('loginStateChanged'));
-      
-      console.log('Login state changed event dispatched');
       
       // Role-based redirection
       switch (userRole) {

@@ -12,7 +12,6 @@ const Navbar = () => {
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      console.log('Navbar - checking login status:', loggedIn);
       setIsLoggedIn(loggedIn);
     };
 
