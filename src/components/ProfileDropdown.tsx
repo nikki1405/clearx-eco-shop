@@ -22,6 +22,8 @@ const ProfileDropdown = () => {
       const role = localStorage.getItem('userRole');
       const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
       
+      console.log('ProfileDropdown - checking login status:', { role, loggedIn });
+      
       if (role && loggedIn) {
         setUserRole(role);
         setIsLoggedIn(true);
@@ -81,6 +83,7 @@ const ProfileDropdown = () => {
   };
 
   const handleLogout = () => {
+    console.log('Logging out...');
     localStorage.removeItem('userRole');
     localStorage.removeItem('isLoggedIn');
     setIsLoggedIn(false);
@@ -102,6 +105,7 @@ const ProfileDropdown = () => {
   };
 
   if (!isLoggedIn) {
+    console.log('ProfileDropdown - user not logged in, returning null');
     return null;
   }
 
@@ -119,7 +123,7 @@ const ProfileDropdown = () => {
           </Avatar>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-white border shadow-lg" align="end" forceMount>
+      <DropdownMenuContent className="w-56 bg-white border shadow-lg z-50" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">Welcome!</p>
@@ -132,7 +136,7 @@ const ProfileDropdown = () => {
         <DropdownMenuItem asChild>
           <Link to={routes.profile} className="flex items-center cursor-pointer">
             <User className="mr-2 h-4 w-4" />
-            <span>Edit Profile</span>
+            <span>View Profile</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
