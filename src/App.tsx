@@ -18,6 +18,7 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import DeliveryAgentDashboard from "./pages/DeliveryAgentDashboard";
 import ProfilePage from "./pages/ProfilePage";
 import BuyNow from "./pages/BuyNow";
+import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const App = () => (
           <Route path="/dashboard/customer" element={<CustomerDashboard />} />
           <Route path="/dashboard/agent" element={<DeliveryAgentDashboard />} />
           <Route path="/buy-now/:productId" element={<BuyNow />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="/retailer-profile" element={<ProfilePage />} />
           <Route path="/customer-profile" element={<ProfilePage />} />
           <Route path="/delivery-profile" element={<ProfilePage />} />

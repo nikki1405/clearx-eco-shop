@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -63,10 +62,14 @@ const BuyNow = () => {
   };
 
   const handlePlaceOrder = () => {
-    console.log('Order placed:', { product, quantity, shippingDetails });
-    // Add order placement logic here
-    alert('Order placed successfully!');
-    navigate('/dashboard/customer');
+    const orderData = {
+      product,
+      quantity,
+      shippingDetails,
+      totalAmount: totalPrice + deliveryFee
+    };
+    
+    navigate('/payment', { state: orderData });
   };
 
   const totalPrice = product.price * quantity;
@@ -259,7 +262,7 @@ const BuyNow = () => {
                         className="w-full bg-eco-green hover:bg-eco-dark text-white text-lg py-3"
                         disabled={!shippingDetails.fullName || !shippingDetails.phone || !shippingDetails.address}
                       >
-                        Place Order
+                        Proceed to Payment
                       </Button>
                       <p className="text-xs text-gray-500 mt-2 text-center">
                         By placing your order, you agree to our terms and conditions
