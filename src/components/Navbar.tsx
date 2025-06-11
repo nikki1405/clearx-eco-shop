@@ -98,11 +98,10 @@ const Navbar = () => {
               <ProfileDropdown />
             ) : (
               <>
-                <Link 
-                  to="/role-selection" 
-                  className="text-sm font-medium text-gray-700 hover:text-eco-green transition-colors"
-                >
-                  Sign In
+                <Link to="/role-selection">
+                  <Button variant="outline" className="text-sm font-medium">
+                    Sign In
+                  </Button>
                 </Link>
                 <Link to="/signup">
                   <Button className="bg-eco-green hover:bg-eco-dark text-white">
@@ -151,8 +150,10 @@ const Navbar = () => {
                 </div>
               ) : (
                 <>
-                  <Link to="/role-selection" className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-eco-green">
-                    Sign In
+                  <Link to="/role-selection" className="block px-3 py-2">
+                    <Button variant="outline" className="w-full">
+                      Sign In
+                    </Button>
                   </Link>
                   <Link to="/signup" className="block px-3 py-2">
                     <Button className="w-full bg-eco-green hover:bg-eco-dark text-white">
