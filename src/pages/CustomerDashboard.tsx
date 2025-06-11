@@ -3,11 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { MapPin } from 'lucide-react';
+import { MapPin, Heart, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/Layout';
 
 const CustomerDashboard = () => {
+  const navigate = useNavigate();
   const [cartOpen, setCartOpen] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({
     category: [],
     discount: '',
@@ -96,6 +99,11 @@ const CustomerDashboard = () => {
     { id: 3, name: 'Fresh Milk Packets', price: 45, quantity: 1, image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=100&h=100&fit=crop' }
   ];
 
+  const wishlistItems = [
+    { id: 2, name: 'Fresh Bread Loaves', price: 25, originalPrice: 35, image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=100&h=100&fit=crop' },
+    { id: 4, name: 'Ripe Bananas', price: 60, originalPrice: 80, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=100&h=100&fit=crop' }
+  ];
+
   const categories = ['Fresh Produce', 'Bakery', 'Dairy', 'Packaged Foods'];
   const locations = ['Mumbai Central', 'Andheri West', 'Bandra East', 'Powai', 'Thane West', 'Borivali West'];
   
@@ -110,6 +118,20 @@ const CustomerDashboard = () => {
   const loyaltyPoints = 1250;
   const totalSavings = 2380;
 
+  const handleBuyNow = (productId) => {
+    navigate(`/buy-now/${productId}`);
+  };
+
+  const handleAddToWishlist = (productId) => {
+    console.log('Added to wishlist:', productId);
+    // Add wishlist logic here
+  };
+
+  const handleAddToCart = (productId) => {
+    console.log('Added to cart:', productId);
+    // Add cart logic here
+  };
+
   return (
     <Layout>
       <div className="min-h-screen bg-gray-50">
@@ -120,17 +142,33 @@ const CustomerDashboard = () => {
               <h1 className="text-3xl font-bold text-gray-900">Customer Dashboard</h1>
               <p className="text-gray-600">Discover great deals and save money</p>
             </div>
-            <Button 
-              onClick={() => setCartOpen(true)}
-              className="bg-eco-green hover:bg-eco-dark relative"
-            >
-              Cart ({cartItems.length})
-              {cartItems.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                  {cartItems.length}
-                </span>
-              )}
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Button 
+                onClick={() => setWishlistOpen(true)}
+                variant="outline"
+                className="relative"
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Wishlist ({wishlistItems.length})
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                    {wishlistItems.length}
+                  </span>
+                )}
+              </Button>
+              <Button 
+                onClick={() => setCartOpen(true)}
+                className="bg-eco-green hover:bg-eco-dark relative"
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Cart ({cartItems.length})
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                    {cartItems.length}
+                  </span>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Stats Cards */}
@@ -328,9 +366,29 @@ const CustomerDashboard = () => {
                         <MapPin className="h-3 w-3 mr-1" />
                         <span>{product.location}</span>
                       </div>
-                      <Button className="w-full bg-eco-green hover:bg-eco-dark text-white">
-                        Add to Cart
-                      </Button>
+                      <div className="space-y-2">
+                        <div className="flex space-x-2">
+                          <Button 
+                            onClick={() => handleAddToCart(product.id)}
+                            className="flex-1 bg-eco-green hover:bg-eco-dark text-white"
+                          >
+                            Add to Cart
+                          </Button>
+                          <Button 
+                            onClick={() => handleAddToWishlist(product.id)}
+                            variant="outline"
+                            size="icon"
+                          >
+                            <Heart className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <Button 
+                          onClick={() => handleBuyNow(product.id)}
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          Buy Now
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
@@ -408,9 +466,61 @@ const CustomerDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Wishlist Sidebar */}
+        {wishlistOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+            <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-lg">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold">Wishlist</h3>
+                  <Button variant="outline" size="sm" onClick={() => setWishlistOpen(false)}>
+                    ✕
+                  </Button>
+                </div>
+                <div className="space-y-4 mb-6">
+                  {wishlistItems.map(item => (
+                    <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <img 
+                          src={item.image} 
+                          alt={item.name}
+                          className="w-12 h-12 object-cover rounded"
+                        />
+                        <div>
+                          <p className="font-medium">{item.name}</p>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-sm font-bold text-eco-green">₹{item.price}</span>
+                            <span className="text-xs text-gray-500 line-through">₹{item.originalPrice}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col space-y-1">
+                        <Button variant="outline" size="sm" onClick={() => handleAddToCart(item.id)}>
+                          Add to Cart
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {wishlistItems.length === 0 && (
+                  <div className="text-center text-gray-500 py-8">
+                    <Heart className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <p>Your wishlist is empty</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
 };
 
 export default CustomerDashboard;
+
+</edits_to_apply>
