@@ -12,8 +12,31 @@ const Navbar = () => {
   useEffect(() => {
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      console.log('Navbar - checking login status:', loggedIn);
-      setIsLoggedIn(loggedIn);
+      const userRole = localStorage.getItem('userRole');
+      
+      // Auto-login logic for dashboard, buy-now, and payment pages
+      const protectedPaths = ['/dashboard/', '/buy-now/', '/payment', '/retailer-profile', '/customer-profile', '/delivery-profile', '/settings'];
+      const isOnProtectedPage = protectedPaths.some(path => location.pathname.startsWith(path));
+      
+      if (isOnProtectedPage && (!loggedIn || !userRole)) {
+        // Auto-login for demo purposes - detect role from URL
+        let detectedRole = 'customer'; // default
+        if (location.pathname.includes('retailer')) {
+          detectedRole = 'retailer';
+        } else if (location.pathname.includes('agent') || location.pathname.includes('delivery')) {
+          detectedRole = 'agent';
+        }
+        
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userRole', detectedRole);
+        setIsLoggedIn(true);
+        
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new Event('loginStateChanged'));
+      } else {
+        console.log('Navbar - checking login status:', loggedIn);
+        setIsLoggedIn(loggedIn);
+      }
     };
 
     // Check initial state
@@ -27,7 +50,7 @@ const Navbar = () => {
       window.removeEventListener('storage', checkLoginStatus);
       window.removeEventListener('loginStateChanged', checkLoginStatus);
     };
-  }, []);
+  }, [location.pathname]);
 
   const isActive = (path: string) => location.pathname === path;
 
