@@ -1,12 +1,22 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Layout from '@/components/Layout';
+import { useToast } from '@/components/ui/use-toast';
 
 const RetailerDashboard = () => {
   const [showAddProduct, setShowAddProduct] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editForm, setEditForm] = useState({
+    name: '',
+    price: '',
+    stock: '',
+    expiry: ''
+  });
+  const { toast } = useToast();
   
   const stats = [
     { title: 'Total Sales', value: '₹45,230', change: '+12%', color: 'text-green-600' },
@@ -15,7 +25,7 @@ const RetailerDashboard = () => {
     { title: 'Orders Today', value: '23', change: '+8', color: 'text-purple-600' }
   ];
 
-  const products = [
+  const [products, setProducts] = useState([
     { 
       id: 1, 
       name: 'Fresh Apples', 
@@ -61,7 +71,7 @@ const RetailerDashboard = () => {
       expiry: '2025-01-11', 
       status: 'Critical' 
     }
-  ];
+  ]);
 
   const salesData = [
     { month: 'Jan', sales: 4000 },
@@ -71,6 +81,58 @@ const RetailerDashboard = () => {
     { month: 'May', sales: 6000 },
     { month: 'Jun', sales: 5500 }
   ];
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setEditForm({
+      name: product.name,
+      price: product.price.replace('₹', ''),
+      stock: product.stock.toString(),
+      expiry: product.expiry
+    });
+  };
+
+  const handleSaveEdit = () => {
+    const updatedProducts = products.map(product => {
+      if (product.id === editingProduct.id) {
+        const updatedStock = parseInt(editForm.stock);
+        let status = 'Active';
+        if (updatedStock < 5) {
+          status = updatedStock < 3 ? 'Critical' : 'Low Stock';
+        }
+        
+        return {
+          ...product,
+          name: editForm.name,
+          price: `₹${editForm.price}`,
+          stock: updatedStock,
+          expiry: editForm.expiry,
+          status: status
+        };
+      }
+      return product;
+    });
+    
+    setProducts(updatedProducts);
+    setEditingProduct(null);
+    setEditForm({ name: '', price: '', stock: '', expiry: '' });
+    
+    toast({
+      title: "Product Updated",
+      description: "Product details have been successfully updated.",
+    });
+  };
+
+  const handleDeleteProduct = (productId) => {
+    const updatedProducts = products.filter(product => product.id !== productId);
+    setProducts(updatedProducts);
+    
+    toast({
+      title: "Product Deleted",
+      description: "Product has been successfully deleted.",
+      variant: "destructive",
+    });
+  };
 
   return (
     <Layout>
@@ -166,8 +228,21 @@ const RetailerDashboard = () => {
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm">Edit</Button>
-                              <Button variant="outline" size="sm" className="text-red-600">Delete</Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleEditProduct(product)}
+                              >
+                                Edit
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="text-red-600"
+                                onClick={() => handleDeleteProduct(product.id)}
+                              >
+                                Delete
+                              </Button>
                             </div>
                           </TableCell>
                         </TableRow>
@@ -275,6 +350,68 @@ const RetailerDashboard = () => {
                   </Button>
                   <Button className="bg-eco-green hover:bg-eco-dark" onClick={() => setShowAddProduct(false)}>
                     Add Product
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Product Modal */}
+          {editingProduct && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <h3 className="text-lg font-semibold mb-4">Edit Product</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                    <Input 
+                      value={editForm.name}
+                      onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                      placeholder="Enter product name" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                    <Input 
+                      value={editForm.price}
+                      onChange={(e) => setEditForm({...editForm, price: e.target.value})}
+                      placeholder="0" 
+                      type="number"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                    <Input 
+                      value={editForm.stock}
+                      onChange={(e) => setEditForm({...editForm, stock: e.target.value})}
+                      placeholder="0" 
+                      type="number" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                    <Input 
+                      value={editForm.expiry}
+                      onChange={(e) => setEditForm({...editForm, expiry: e.target.value})}
+                      type="date" 
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-3 mt-6">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setEditingProduct(null);
+                      setEditForm({ name: '', price: '', stock: '', expiry: '' });
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    className="bg-eco-green hover:bg-eco-dark" 
+                    onClick={handleSaveEdit}
+                  >
+                    Save Changes
                   </Button>
                 </div>
               </div>
