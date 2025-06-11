@@ -180,7 +180,9 @@ const CustomerDashboard = () => {
                     <p className="text-sm font-medium text-gray-600">Loyalty Points</p>
                     <p className="text-2xl font-bold text-eco-green">{loyaltyPoints}</p>
                   </div>
-                  <div className="text-3xl">🏆</div>
+                  <div className="text-3xl">
+                    <img src="https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=40&h=40&fit=crop" alt="trophy" className="w-8 h-8" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -191,7 +193,9 @@ const CustomerDashboard = () => {
                     <p className="text-sm font-medium text-gray-600">Total Savings</p>
                     <p className="text-2xl font-bold text-green-600">₹{totalSavings}</p>
                   </div>
-                  <div className="text-3xl">💰</div>
+                  <div className="text-3xl">
+                    <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=40&h=40&fit=crop" alt="money" className="w-8 h-8" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -202,7 +206,9 @@ const CustomerDashboard = () => {
                     <p className="text-sm font-medium text-gray-600">Orders This Month</p>
                     <p className="text-2xl font-bold text-blue-600">12</p>
                   </div>
-                  <div className="text-3xl">📦</div>
+                  <div className="text-3xl">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=40&h=40&fit=crop" alt="package" className="w-8 h-8" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
