@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Layout from '@/components/Layout';
 import { useToast } from '@/components/ui/use-toast';
+import { Upload } from 'lucide-react';
 
 const RetailerDashboard = () => {
   const [showAddProduct, setShowAddProduct] = useState(false);
@@ -14,7 +14,15 @@ const RetailerDashboard = () => {
     name: '',
     price: '',
     stock: '',
-    expiry: ''
+    expiry: '',
+    image: ''
+  });
+  const [addForm, setAddForm] = useState({
+    name: '',
+    price: '',
+    stock: '',
+    expiry: '',
+    image: ''
   });
   const { toast } = useToast();
   
@@ -82,13 +90,30 @@ const RetailerDashboard = () => {
     { month: 'Jun', sales: 5500 }
   ];
 
+  const handleImageUpload = (event, isEdit = false) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target.result;
+        if (isEdit) {
+          setEditForm({...editForm, image: imageUrl});
+        } else {
+          setAddForm({...addForm, image: imageUrl});
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleEditProduct = (product) => {
     setEditingProduct(product);
     setEditForm({
       name: product.name,
       price: product.price.replace('₹', ''),
       stock: product.stock.toString(),
-      expiry: product.expiry
+      expiry: product.expiry,
+      image: product.image
     });
   };
 
@@ -107,7 +132,8 @@ const RetailerDashboard = () => {
           price: `₹${editForm.price}`,
           stock: updatedStock,
           expiry: editForm.expiry,
-          status: status
+          status: status,
+          image: editForm.image
         };
       }
       return product;
@@ -115,11 +141,41 @@ const RetailerDashboard = () => {
     
     setProducts(updatedProducts);
     setEditingProduct(null);
-    setEditForm({ name: '', price: '', stock: '', expiry: '' });
+    setEditForm({ name: '', price: '', stock: '', expiry: '', image: '' });
     
     toast({
       title: "Product Updated",
       description: "Product details have been successfully updated.",
+    });
+  };
+
+  const handleAddProduct = () => {
+    if (!addForm.name || !addForm.price || !addForm.stock || !addForm.expiry) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newProduct = {
+      id: products.length + 1,
+      name: addForm.name,
+      price: `₹${addForm.price}`,
+      stock: parseInt(addForm.stock),
+      expiry: addForm.expiry,
+      image: addForm.image || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=100&h=100&fit=crop',
+      status: parseInt(addForm.stock) < 5 ? (parseInt(addForm.stock) < 3 ? 'Critical' : 'Low Stock') : 'Active'
+    };
+
+    setProducts([...products, newProduct]);
+    setAddForm({ name: '', price: '', stock: '', expiry: '', image: '' });
+    setShowAddProduct(false);
+
+    toast({
+      title: "Product Added",
+      description: "New product has been successfully added.",
     });
   };
 
@@ -329,26 +385,78 @@ const RetailerDashboard = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-                    <Input placeholder="Enter product name" />
+                    <Input 
+                      placeholder="Enter product name"
+                      value={addForm.name}
+                      onChange={(e) => setAddForm({...addForm, name: e.target.value})}
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                    <Input placeholder="₹0" />
+                    <Input 
+                      placeholder="₹0"
+                      type="number"
+                      value={addForm.price}
+                      onChange={(e) => setAddForm({...addForm, price: e.target.value})}
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
-                    <Input placeholder="0" type="number" />
+                    <Input 
+                      placeholder="0" 
+                      type="number"
+                      value={addForm.stock}
+                      onChange={(e) => setAddForm({...addForm, stock: e.target.value})}
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
-                    <Input type="date" />
+                    <Input 
+                      type="date"
+                      value={addForm.expiry}
+                      onChange={(e) => setAddForm({...addForm, expiry: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-1">
+                        <Input 
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, false)}
+                          className="hidden"
+                          id="add-image-upload"
+                        />
+                        <label 
+                          htmlFor="add-image-upload"
+                          className="flex items-center justify-center w-full h-10 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          <span className="text-sm">Upload Image</span>
+                        </label>
+                      </div>
+                      {addForm.image && (
+                        <img 
+                          src={addForm.image} 
+                          alt="Preview" 
+                          className="w-16 h-16 object-cover rounded border"
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex justify-end space-x-3 mt-6">
-                  <Button variant="outline" onClick={() => setShowAddProduct(false)}>
+                  <Button variant="outline" onClick={() => {
+                    setShowAddProduct(false);
+                    setAddForm({ name: '', price: '', stock: '', expiry: '', image: '' });
+                  }}>
                     Cancel
                   </Button>
-                  <Button className="bg-eco-green hover:bg-eco-dark" onClick={() => setShowAddProduct(false)}>
+                  <Button 
+                    className="bg-eco-green hover:bg-eco-dark" 
+                    onClick={handleAddProduct}
+                  >
                     Add Product
                   </Button>
                 </div>
@@ -396,13 +504,41 @@ const RetailerDashboard = () => {
                       type="date" 
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-1">
+                        <Input 
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, true)}
+                          className="hidden"
+                          id="edit-image-upload"
+                        />
+                        <label 
+                          htmlFor="edit-image-upload"
+                          className="flex items-center justify-center w-full h-10 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          <span className="text-sm">Change Image</span>
+                        </label>
+                      </div>
+                      {editForm.image && (
+                        <img 
+                          src={editForm.image} 
+                          alt="Preview" 
+                          className="w-16 h-16 object-cover rounded border"
+                        />
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div className="flex justify-end space-x-3 mt-6">
                   <Button 
                     variant="outline" 
                     onClick={() => {
                       setEditingProduct(null);
-                      setEditForm({ name: '', price: '', stock: '', expiry: '' });
+                      setEditForm({ name: '', price: '', stock: '', expiry: '', image: '' });
                     }}
                   >
                     Cancel
